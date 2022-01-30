@@ -33,9 +33,8 @@ function Index() {
     setFetchedData(resArray);
   };
 
-  const handleYesterdayBtn = () => {
-    const date = dateFunc("yesterday");
-    let res = [];
+  const searchFunc = (date) => {
+    const res = [];
     const daysList = getDaysArray(
       new Date(date.firstDay),
       new Date(date.lastDay)
@@ -49,85 +48,36 @@ function Index() {
         ]);
         countryArr[1][1].forEach((event) => {
           if (event.date === formatDate(day)) {
-            res.push({ date: event.date, country: country.division });
+            res.push({
+              event: event.title,
+              date: event.date,
+              country: country.division,
+            });
           }
         });
       });
     }
     setRes(res);
+  };
+
+  const handleYesterdayBtn = () => {
+    const date = dateFunc("yesterday");
+    searchFunc(date);
   };
 
   const handleLastWeekBtn = () => {
-    const res = [];
     const date = dateFunc("last week");
-    const daysList = getDaysArray(
-      new Date(date.firstDay),
-      new Date(date.lastDay)
-    );
-    for (let index = 0; index < fetchedData.length; index++) {
-      const country = fetchedData[index];
-      daysList.forEach((day) => {
-        const countryArr = Object.keys(country).map((key) => [
-          key,
-          country[key],
-        ]);
-        countryArr[1][1].forEach((event) => {
-          if (event.date === formatDate(day)) {
-            res.push({ date: event.date, country: country.division });
-          }
-        });
-      });
-    }
-    setRes(res);
+    searchFunc(date);
   };
 
   const handleLastMonthBtn = () => {
-    const res = [];
     const date = dateFunc("last month");
-    const daysList = getDaysArray(
-      new Date(date.firstDay),
-      new Date(date.lastDay)
-    );
-    for (let index = 0; index < fetchedData.length; index++) {
-      const country = fetchedData[index];
-      daysList.forEach((day) => {
-        const countryArr = Object.keys(country).map((key) => [
-          key,
-          country[key],
-        ]);
-        countryArr[1][1].forEach((event) => {
-          if (event.date === formatDate(day)) {
-            res.push({ date: event.date, country: country.division });
-          }
-        });
-      });
-    }
-    setRes(res);
+    searchFunc(date);
   };
 
   const handleRangeBtn = () => {
-    setShow(true);
-    let res = [];
     const date = dateFunc("date range");
-    const daysList = getDaysArray(
-      new Date(date.firstDay),
-      new Date(date.lastDay)
-    );
-    for (let index = 0; index < fetchedData.length; index++) {
-      const country = fetchedData[index];
-      daysList.forEach((day) => {
-        const countryArr = Object.keys(country).map((key) => [
-          key,
-          country[key],
-        ]);
-        countryArr[1][1].forEach((event) => {
-          if (event.date === formatDate(day)) {
-            res.push({ date: event.date, country: country.division });
-          }
-        });
-      });
-    }
-    setRes(res);
+    searchFunc(date);
   };
 
   return (
