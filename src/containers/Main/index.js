@@ -9,96 +9,127 @@ function Main() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    const getData = () => {
+      fetch("https://www.gov.uk/bank-holidays.json", {
+        method: "GET",
+        redirect: "follow",
+      })
+        .then((response) => response.json())
+        .then((result) => cleanUpData(result))
+        .catch((error) => console.log("error", error));
+    };
     getData();
   }, []);
 
-  const getData = () => {
-    fetch("https://www.gov.uk/bank-holidays.json", {
-      method: "GET",
-      redirect: "follow",
-    })
-      .then((response) => response.json())
-      .then((result) => setFetchedData(result))
-      .catch((error) => console.log("error", error));
+  const cleanUpData = (fetchedData) => {
+    let resArray = [];
+    const fetchedDataArr = Object.keys(fetchedData).map((key) => [
+      key,
+      fetchedData[key],
+    ]);
+    fetchedDataArr.forEach((country) => {
+      resArray.push(country[1]);
+    });
+    setFetchedData(resArray);
   };
 
   const handleYesterdayBtn = () => {
     const date = dateFunc("yesterday");
-    let result = [];
-    for (let index = 0; index < Object.entries(fetchedData).length; index++) {
-      const element = Object.entries(fetchedData)[index];
-      const res =
-        ("elem",
-        element[1].events.filter(function (a) {
-          return a.date === date;
-        }));
-      result.push(res);
+    let res = [];
+    const daysList = getDaysArray(
+      new Date(date.firstDay),
+      new Date(date.lastDay)
+    );
+    for (let index = 0; index < fetchedData.length; index++) {
+      const country = fetchedData[index];
+      daysList.forEach((day) => {
+        const countryArr = Object.keys(country).map((key) => [
+          key,
+          country[key],
+        ]);
+        countryArr[1][1].forEach((event) => {
+          if (event.date === formatDate(day)) {
+            res.push({ date: event.date, country: country.division });
+          }
+        });
+      });
     }
-    setRes(result);
+    setRes(res);
   };
 
   const handleLastWeekBtn = () => {
+    const res = [];
     const date = dateFunc("last week");
-    for (let index = 0; index < Object.entries(fetchedData).length; index++) {
-      const element = Object.entries(fetchedData)[index];
-      const daysList = getDaysArray(
-        new Date(date.firstDay),
-        new Date(date.lastDay)
-      );
+    const daysList = getDaysArray(
+      new Date(date.firstDay),
+      new Date(date.lastDay)
+    );
+    for (let index = 0; index < fetchedData.length; index++) {
+      const country = fetchedData[index];
       daysList.forEach((day) => {
-        element[1].events.filter(function (a) {
-          if (a.date === formatDate(day)) {
-            console.log("some");
+        const countryArr = Object.keys(country).map((key) => [
+          key,
+          country[key],
+        ]);
+        countryArr[1][1].forEach((event) => {
+          if (event.date === formatDate(day)) {
+            res.push({ date: event.date, country: country.division });
           }
-          return a.date === day;
         });
       });
     }
+    setRes(res);
   };
 
   const handleLastMonthBtn = () => {
+    const res = [];
     const date = dateFunc("last month");
-    for (let index = 0; index < Object.entries(fetchedData).length; index++) {
-      const element = Object.entries(fetchedData)[index];
-      const daysList = getDaysArray(
-        new Date(date.firstDay),
-        new Date(date.lastDay)
-      );
+    const daysList = getDaysArray(
+      new Date(date.firstDay),
+      new Date(date.lastDay)
+    );
+    for (let index = 0; index < fetchedData.length; index++) {
+      const country = fetchedData[index];
       daysList.forEach((day) => {
-        element[1].events.filter(function (a) {
-          if (a.date === formatDate(day)) {
-            console.log("some");
+        const countryArr = Object.keys(country).map((key) => [
+          key,
+          country[key],
+        ]);
+        countryArr[1][1].forEach((event) => {
+          if (event.date === formatDate(day)) {
+            res.push({ date: event.date, country: country.division });
           }
-          return a.date === day;
         });
       });
     }
+    setRes(res);
   };
 
   const handleRangeBtn = () => {
     setShow(true);
-    let result = [];
+    let res = [];
     const date = dateFunc("date range");
-    for (let index = 0; index < Object.entries(fetchedData).length; index++) {
-      const element = Object.entries(fetchedData)[index];
-      const daysList = getDaysArray(
-        new Date(date.firstDay),
-        new Date(date.lastDay)
-      );
+    const daysList = getDaysArray(
+      new Date(date.firstDay),
+      new Date(date.lastDay)
+    );
+    for (let index = 0; index < fetchedData.length; index++) {
+      const country = fetchedData[index];
       daysList.forEach((day) => {
-        element[1].events.filter(function (a) {
-          if (a.date === formatDate(day)) {
-            result.push(a);
+        const countryArr = Object.keys(country).map((key) => [
+          key,
+          country[key],
+        ]);
+        countryArr[1][1].forEach((event) => {
+          if (event.date === formatDate(day)) {
+            res.push({ date: event.date, country: country.division });
           }
-          return a.date === day;
         });
       });
     }
-    setRes(result);
+    setRes(res);
   };
-
   console.log(res);
-
   return (
     <>
       <div className="App">
@@ -108,6 +139,7 @@ function Main() {
         <Button onClick={handleLastWeekBtn} text="last week" />
         <Button onClick={handleLastMonthBtn} text="last month" />
         <Button onClick={handleRangeBtn} text="select range" />
+
         {show ? (
           <span>
             <p>
