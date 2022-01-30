@@ -76,6 +76,7 @@ function Index() {
   };
 
   const handleRangeBtn = () => {
+    setShow(true);
     const date = dateFunc("date range");
     searchFunc(date);
   };
@@ -84,7 +85,7 @@ function Index() {
     <>
       <div className="App">
         <header></header>
-        <p>Bank Holidays</p>
+        <h2>Bank Holidays</h2>
         <Button onClick={handleYesterdayBtn} text={"yesterday"} />
         <Button onClick={handleLastWeekBtn} text="last week" />
         <Button onClick={handleLastMonthBtn} text="last month" />
@@ -93,7 +94,7 @@ function Index() {
         {show ? (
           <span>
             <p>
-              Start <input type="date" id="start"></input>
+              start <input type="date" id="start"></input>
             </p>
             <p>
               end <input type="date" id="end"></input>
@@ -120,7 +121,7 @@ function Index() {
           ""
         )}
         {res ? (
-          <div>
+          <div className="flexContainer">
             {res.map((resultItem) => (
               <p key={Math.floor(Math.random() * 10000000 + 1)}>
                 {JSON.stringify(resultItem)}
@@ -128,7 +129,9 @@ function Index() {
             ))}
           </div>
         ) : (
-          ""
+          <div>
+            <p>"no results"</p>
+          </div>
         )}
       </div>
     </>
