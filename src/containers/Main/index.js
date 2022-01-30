@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { formatDate, getDaysArray, dateFunc } from "../../utils/DateUtil";
 import { Button } from "../../components/Button";
 
-function Main() {
+function Index() {
   const [fetchedData, setFetchedData] = useState(null);
   const [res, setRes] = useState(null);
   const [show, setShow] = useState(false);
@@ -129,7 +129,7 @@ function Main() {
     }
     setRes(res);
   };
-  console.log(res);
+
   return (
     <>
       <div className="App">
@@ -160,6 +160,7 @@ function Main() {
               onClick={(e) => {
                 e.preventDefault();
                 setShow(false);
+                setRes(false);
               }}
             >
               Done
@@ -168,9 +169,20 @@ function Main() {
         ) : (
           ""
         )}
+        {res ? (
+          <div>
+            {res.map((resultItem) => (
+              <p key={Math.floor(Math.random() * 10000000 + 1)}>
+                {JSON.stringify(resultItem)}
+              </p>
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );
 }
 
-export default Main;
+export default Index;
